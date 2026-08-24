@@ -40,29 +40,29 @@ Lần chạy đầu **phải fail** vì template còn placeholder. Sửa từng 
 
 Thư mục `submissions/<MÃ-HỌC-VIÊN>/` gồm đúng sáu artifact:
 
-| Artifact | Product decision mà artifact hỗ trợ |
-|---|---|
-| `submission.json` | Product Context, System Profile, Risk Snapshot, KPI/KRI, legal classification và release decision. |
-| `sources.csv` | Nguồn nào chứng minh claim nào, với giới hạn gì. |
-| `case-studies.csv` | 2–3 case có thật, tách verified fact, reported harm và uncertainty. |
-| `harm-map.csv` | Ai bị tác động, lỗi bắt đầu ở đâu, control/owner/monitoring là gì. |
-| `compliance-gap-analysis.csv` | Risk → product requirement → Given/When/Then → priority → evidence → release blocker. |
-| `group-synthesis.csv` | Pattern chung sau khi so sánh các ngành trong nhóm. |
+| Artifact                        | Product decision mà artifact hỗ trợ                                                              |
+| ------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `submission.json`             | Product Context, System Profile, Risk Snapshot, KPI/KRI, legal classification và release decision. |
+| `sources.csv`                 | Nguồn nào chứng minh claim nào, với giới hạn gì.                                            |
+| `case-studies.csv`            | 2–3 case có thật, tách verified fact, reported harm và uncertainty.                            |
+| `harm-map.csv`                | Ai bị tác động, lỗi bắt đầu ở đâu, control/owner/monitoring là gì.                     |
+| `compliance-gap-analysis.csv` | Risk → product requirement → Given/When/Then → priority → evidence → release blocker.          |
+| `group-synthesis.csv`         | Pattern chung sau khi so sánh các ngành trong nhóm.                                             |
 
 Schema và các enum hợp lệ nằm trong
 [lab.config.json](lab.config.json) và [schemas/](schemas/).
 
 ## Luồng làm bài 150 phút
 
-| Thời gian | Việc cần chốt |
-|---:|---|
-| 0–20 | Problem, value hypothesis, scope/non-goals, journey moment, automation và fallback. |
-| 20–35 | Industry Risk Snapshot, mỗi chiều 1–5 và có rationale. |
-| 35–70 | Research 2–3 case, ghi claim và source trước khi kết luận harm. |
-| 70–100 | Harm Map theo stakeholder, failure layer và high-risk moment. |
-| 100–130 | Product requirement, acceptance criteria, KPI/KRI và release blockers. |
-| 130–145 | Thảo luận nhóm, tìm pattern xuyên ngành. |
-| 145–150 | Chạy validator, tự review, commit và push. |
+| Thời gian | Việc cần chốt                                                                     |
+| ---------: | ------------------------------------------------------------------------------------ |
+|      0–20 | Problem, value hypothesis, scope/non-goals, journey moment, automation và fallback. |
+|     20–35 | Industry Risk Snapshot, mỗi chiều 1–5 và có rationale.                          |
+|     35–70 | Research 2–3 case, ghi claim và source trước khi kết luận harm.                |
+|    70–100 | Harm Map theo stakeholder, failure layer và high-risk moment.                       |
+|   100–130 | Product requirement, acceptance criteria, KPI/KRI và release blockers.              |
+|   130–145 | Thảo luận nhóm, tìm pattern xuyên ngành.                                       |
+|   145–150 | Chạy validator, tự review, commit và push.                                        |
 
 Hướng dẫn đầy đủ: [docs/student-guide.md](docs/student-guide.md). Cách đánh giá:
 [docs/rubric.md](docs/rubric.md).
