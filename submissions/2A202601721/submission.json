@@ -1,0 +1,87 @@
+{
+  "schema_version": "1.0.0",
+  "metadata": {
+    "student_name": "Cao Nhat Minh",
+    "student_id": "2A202601721",
+    "group_id": "<FILL - dien ma nhom that cua ban>",
+    "submitted_at": "<FILL ISO-8601 DATE-TIME - dien khi nop bai>"
+  },
+  "industry": "healthcare-assistant",
+  "product_context": {
+    "product_name": "TriageAssist - Trợ lý sàng lọc triệu chứng cho nền tảng telehealth",
+    "product_stage": "pilot",
+    "problem_statement": "Bệnh nhân gọi vào tổng đài telehealth phải chờ trung bình 15-30 phút để được điều dưỡng đánh giá mức độ khẩn cấp trước khi được ghép với bác sĩ phù hợp. Đội ngũ điều dưỡng sàng lọc quá tải vào giờ cao điểm, khiến bệnh nhân có triệu chứng nghiêm trọng phải chờ lâu ngang bệnh nhân triệu chứng nhẹ.",
+    "target_users": ["Điều dưỡng sàng lọc (triage nurse) tại trung tâm telehealth", "Bệnh nhân gọi vào nền tảng telehealth"],
+    "value_hypothesis": "Nếu AI tóm tắt triệu chứng bệnh nhân tự khai báo và đề xuất mức độ ưu tiên (urgency tier) trước khi điều dưỡng gọi lại, thời gian chờ trung bình của bệnh nhân triệu chứng khẩn cấp sẽ giảm, đo bằng median time-to-first-clinical-contact theo từng urgency tier.",
+    "in_scope": ["Tóm tắt triệu chứng bệnh nhân tự khai qua form/chat trước cuộc gọi", "Đề xuất urgency tier (routine/urgent/emergency) để điều dưỡng tham khảo", "Sắp xếp thứ tự hàng chờ callback theo urgency tier đã được điều dưỡng xác nhận"],
+    "non_goals": ["Không tự đưa ra chẩn đoán bệnh", "Không tự động kê đơn hoặc chỉ định điều trị", "Không thay thế đánh giá lâm sàng của điều dưỡng/bác sĩ", "Không xử lý trường hợp cần cấp cứu 115 - route thẳng ra ngoài hệ thống"],
+    "user_journey_moment": "Ngay sau khi bệnh nhân khai triệu chứng ban đầu qua app/chat, trước khi được điều dưỡng gọi lại để đánh giá và ghép bác sĩ.",
+    "target_launch_or_review_date": "2026-11-16",
+    "automation_level": "decision-support",
+    "fallback_experience": "Nếu AI lỗi, không chạy được, hoặc độ tin cậy thấp, hệ thống tự động gắn nhãn 'cần điều dưỡng đánh giá thủ công ngay' và đẩy case lên đầu hàng đợi con người thay vì chặn hoặc trì hoãn bệnh nhân. Điều dưỡng luôn có thể ghi đè urgency tier của AI bằng một thao tác và bắt buộc ghi lý do ghi đè.",
+    "decision_reversibility": "partially-reversible"
+  },
+  "system_profile": {
+    "purpose": "Hỗ trợ điều dưỡng triage ưu tiên hàng chờ callback bệnh nhân theo mức độ khẩn cấp dựa trên triệu chứng tự khai báo.",
+    "user_groups": ["Điều dưỡng triage tại trung tâm telehealth", "Bệnh nhân sử dụng ứng dụng telehealth", "Bác sĩ tiếp nhận ca sau khi được ghép"],
+    "decision_impact": "Ảnh hưởng thứ tự và thời gian bệnh nhân được điều dưỡng/bác sĩ liên hệ lại; urgency tier bị gán sai có thể làm chậm can thiệp cho ca thực sự khẩn cấp, hoặc tạo báo động giả làm tăng tải hệ thống.",
+    "data_types": ["Triệu chứng bệnh nhân tự khai báo (văn bản)", "Tiền sử bệnh cơ bản do bệnh nhân tự cung cấp (self-reported, không phải hồ sơ bệnh án thật)", "Metadata thời gian/kênh liên hệ"],
+    "deployment_context": "Tích hợp trong app/web telehealth, chạy song song với hàng đợi callback do điều dưỡng vận hành; triển khai pilot tại các phòng khám telehealth ở đô thị lớn có kết nối internet ổn định.",
+    "target_markets": ["Việt Nam - đô thị lớn, giai đoạn pilot"],
+    "system_boundary": {
+      "model": "LLM sẵn có qua API của bên thứ ba, dùng để tóm tắt triệu chứng và gợi ý urgency tier; không phải model y tế chuyên biệt được huấn luyện riêng hay được cơ quan y tế phê duyệt như thiết bị chẩn đoán.",
+      "application": "Module triage-assist nhúng trong app telehealth, hiển thị bản tóm tắt triệu chứng và urgency tier gợi ý trên màn hình làm việc của điều dưỡng.",
+      "people": ["Điều dưỡng triage", "Bác sĩ tiếp nhận ca", "Đội vận hành/QA giám sát chất lượng gợi ý của AI", "Bệnh nhân khai triệu chứng"],
+      "vendors": ["Nhà cung cấp LLM API (bên thứ ba, chưa chốt tên cụ thể)"],
+      "upstream_inputs": ["Form/chat khai triệu chứng do bệnh nhân nhập", "Dữ liệu kênh liên hệ (app/web)"],
+      "downstream_decisions": ["Thứ tự hàng chờ callback", "Quyết định của điều dưỡng về gọi khẩn cấp ngay hay theo lịch", "Quyết định hướng điều trị của bác sĩ sau khi được ghép ca"]
+    }
+  },
+  "industry_risk_snapshot": {
+    "harm_severity": 5,
+    "high_stakes": 5,
+    "sensitive_data": 5,
+    "affected_scale": 3,
+    "human_review_need": 5,
+    "rationale": "harm_severity=5: hậu quả tệ nhất đáng tin cậy là một ca thực sự khẩn cấp (đột quỵ, sốc phản vệ, nhồi máu) bị gán urgency tier thấp hơn thực tế, làm chậm can thiệp và có thể dẫn đến tử vong hoặc di chứng vĩnh viễn - đây là hậu quả sức khỏe/sinh mạng, khó đảo ngược. high_stakes=5: quyết định urgency tier ảnh hưởng trực tiếp đến thời điểm bệnh nhân được tiếp cận chăm sóc y tế, tức ảnh hưởng sức khỏe và sinh mạng, dù đây là decision-support chứ không tự động hoàn toàn. sensitive_data=5: dữ liệu là triệu chứng sức khỏe và tiền sử bệnh tự khai báo - thuộc nhóm dữ liệu nhạy cảm theo cả pháp luật Việt Nam (Nghị định bảo vệ dữ liệu cá nhân) và EU (GDPR Article 9 - special category health data); lộ hoặc gán sai có thể ảnh hưởng bảo hiểm, việc làm, danh dự của bệnh nhân. affected_scale=3: ở giai đoạn pilot chỉ triển khai tại một số phòng khám telehealth đô thị lớn, số bệnh nhân bị ảnh hưởng mỗi ngày ở mức vài trăm - đáng kể nhưng chưa phải quy mô toàn quốc; cần chấm lại nếu mở rộng sang production. human_review_need=5: vì harm_severity và high_stakes ở mức tối đa, mọi đề xuất của AI bắt buộc điều dưỡng xác nhận trước khi ảnh hưởng thứ tự hàng chờ, và cần có escalation path riêng cho case nghi ngờ khẩn cấp ngay cả khi AI đánh giá thấp. Uncertainty: chưa có dữ liệu pilot thực tế để đo tỷ lệ under-triage (bỏ sót ca khẩn cấp) của AI trong bối cảnh triệu chứng tự khai báo bằng tiếng Việt; snapshot này chỉ là triage nội bộ để biết đâu cần đào sâu, không phải legal classification, và không được dùng để suy ra mức độ high-risk theo luật."
+  },
+  "legal_classification": {
+    "vietnam": {
+      "status": "uncertain-requires-legal-review",
+      "rationale": "Use case: trợ lý AI tóm tắt triệu chứng và gợi ý urgency tier cho hàng chờ callback telehealth. Role: automation_level=decision-support - AI chỉ đề xuất, điều dưỡng người Việt Nam luôn xác nhận trước khi tier có hiệu lực, không phải hệ thống tự quyết định. Target market: pilot tại một số phòng khám telehealth đô thị lớn ở Việt Nam. Product boundary: xử lý dữ liệu sức khỏe tự khai báo qua vendor LLM API bên thứ ba. Luật AI 134/2025/QH15 và Quyết định 33/2026/QĐ-TTg thiết lập khung pháp lý và danh sách hệ thống AI rủi ro cao tại Việt Nam, nhưng use case cụ thể này (decision-support, không tự động hoàn toàn, trong lĩnh vực y tế) chưa được đối chiếu từng mục với danh sách chính thức. Dữ liệu sức khỏe tự khai báo là dữ liệu nhạy cảm nên cần pháp chế/DPO review trước khi mở rộng pilot; không tự suy diễn status từ industry_risk_snapshot hay copy status từ đánh giá EU.",
+      "source_ids": ["SRC-05", "SRC-06"]
+    },
+    "eu": {
+      "status": "uncertain-requires-legal-review",
+      "rationale": "Use case: cùng một trợ lý sàng lọc triệu chứng/gợi ý urgency tier, đánh giá riêng cho khả năng đưa vào thị trường EU (không phải copy từ status Việt Nam). Role: automation_level=decision-support với con người xác nhận, nhưng EU AI Act đánh giá high-risk dựa trên chức năng hệ thống chứ không miễn trừ chỉ vì có human-in-the-loop. Target market: EU (giả định mở rộng trong tương lai, hiện chưa triển khai). Product boundary: dữ liệu sức khỏe tự khai báo qua vendor LLM API, downstream ảnh hưởng quyết định chăm sóc y tế. EU AI Act Annex III mục 5(d) liệt kê 'emergency healthcare patient triage systems' là high-risk, nhưng TriageAssist là công cụ ưu tiên hàng chờ callback trong telehealth thường quy, không phải hệ thống dispatch cấp cứu tương đương emergency-response/911; việc có rơi vào phạm vi 5(d) hay diễn giải rộng hơn của Annex III hay không cần legal counsel xác nhận chính thức trước khi vào thị trường EU.",
+      "source_ids": ["SRC-04"]
+    },
+    "other_markets": "Chưa đánh giá thị trường nào khác ngoài Việt Nam (thị trường pilot chính) và EU (đánh giá tham chiếu theo yêu cầu bài lab); cần đánh giá riêng nếu mở rộng sang thị trường mới.",
+    "legal_review_required": true
+  },
+  "product_metrics": {
+    "success_kpi": "Đối tượng đo: median time-to-first-clinical-contact (từ lúc bệnh nhân khai triệu chứng đến lúc điều dưỡng liên hệ lại), tính riêng cho nhóm được gán tier 'urgent'/'emergency'. Target: giảm xuống dưới 10 phút trong 8 tuần đầu pilot, so với baseline ước tính 15-30 phút hiện nay cho toàn bộ hàng chờ không phân biệt mức độ. Phạm vi: các phòng khám telehealth tham gia pilot.",
+    "risk_kri": "Hai chỉ số đo song song, cùng phạm vi pilot 8 tuần: (1) leading - override-up rate: tỷ lệ case bị điều dưỡng nâng tier so với gợi ý AI, target giữ dưới 15% mỗi tuần; (2) lagging - tỷ lệ case bị tái phân loại thành emergency sau khi AI/điều dưỡng ban đầu gán routine hoặc urgent, target dưới 1% mỗi tuần. Lý do dùng cặp chỉ số này: nếu success_kpi (thời gian chờ nhóm urgent/emergency) cải thiện chỉ vì hệ thống phân loại ít case vào nhóm urgent hơn (under-triage để 'làm đẹp' con số), tỷ lệ tái phân loại thành emergency ở (2) sẽ tăng và bắt được ngay hiện tượng KPI tăng trong khi harm cũng tăng.",
+    "guardrail_metric": "Hard guardrail, không đánh đổi để tăng KPI: 0 case thuộc watch-list triệu chứng nguy hiểm đã định nghĩa (theo GAP-01) được xử lý mà thiếu auto-escalate tier tối thiểu 'urgent', đo liên tục theo thời gian thực trong toàn bộ phạm vi pilot. Vượt ngưỡng 0 (tức có ít nhất 1 case vi phạm) lập tức pause tính năng auto-suggest và chuyển toàn bộ sàng lọc về thủ công cho đến khi điều tra xong.",
+    "review_cadence": "Định kỳ: review hàng tuần trong 8 tuần đầu pilot, sau đó review hàng tháng nếu ổn định. Event trigger bắt buộc re-test/re-classify sớm hơn lịch định kỳ khi xảy ra bất kỳ điều nào sau: (a) incident under-triage hoặc override-up rate/tái phân loại vượt threshold ở risk_kri; (b) đổi vendor hoặc phiên bản LLM API; (c) thay đổi schema/nguồn dữ liệu triệu chứng đầu vào; (d) mở rộng scope - thêm phòng khám, tăng automation_level, hoặc chuyển sang thị trường mới (vd EU, kích hoạt lại GAP-04)."
+  },
+  "release_decision": {
+    "accountable_product_owner": "Product Owner - TriageAssist",
+    "risk_acceptance_owner": "Giám đốc Y khoa/Chief Medical Officer của đối tác telehealth",
+    "independent_reviewer": "Risk & Patient Safety Review Board (độc lập với product team)",
+    "decision": "conditional-go",
+    "release_blockers": [
+      "GAP-01: safety-net escalation rule cho watch-list triệu chứng nguy hiểm chưa triển khai",
+      "GAP-02: fairness audit theo giới/tuổi chưa thực hiện",
+      "GAP-04: đánh giá pháp lý (DPIA) cho dữ liệu sức khỏe chưa hoàn tất"
+    ],
+    "release_conditions": [
+      "Chỉ tiếp tục pilot ở quy mô hiện tại (không tăng số phòng khám) cho đến khi GAP-01 hoàn tất và có audit log xác nhận",
+      "Không tăng automation_level vượt quá decision-support cho đến khi GAP-02 có kết quả được Risk Review Board ký duyệt",
+      "Không mở rộng sang thị trường mới hoặc chuyển sang limited-production cho đến khi GAP-04 hoàn tất với văn bản ký duyệt từ pháp chế/DPO",
+      "Điều dưỡng triage tiếp tục bắt buộc xác nhận thủ công 100% case trong lúc chờ GAP-03 triển khai"
+    ],
+    "next_review_trigger": "Trong vòng 8 tuần kể từ ngày bắt đầu pilot, hoặc ngay khi: có incident under-triage/override-up rate vượt threshold, GAP-01/02/04 chuyển sang status=done, hoặc có kế hoạch mở rộng phòng khám/automation level.",
+    "residual_risk_rationale": "Ba harm chính trong harm-map.csv đều còn residual risk đáng kể vì control đề xuất chưa triển khai: CASE-01 (under-triage case khẩn cấp, residual severity 4/likelihood 2) vì GAP-01 (safety-net rule) status=not-started; CASE-03 (bias giới/tuổi ảnh hưởng affected-non-customer, residual severity 4/likelihood 1) vì GAP-02 (fairness audit) status=not-started; CASE-02 (over-reliance của điều dưỡng giờ cao điểm, residual severity 3/likelihood 2) vì GAP-03 chỉ mới 'planned', chưa triển khai UI change. Decision conditional-go phù hợp với evidence hiện có vì: (a) existing control duy nhất - xác nhận thủ công 100% của điều dưỡng trước khi tier có hiệu lực - đã đủ để chấp nhận residual risk này ở QUY MÔ PILOT NHỎ hiện tại (vài phòng khám, có giám sát trực tiếp), nhưng (b) chưa đủ evidence/control để chấp nhận residual risk này nếu mở rộng quy mô, tăng automation level, hoặc vào thị trường mới - đó là lý do quyết định không phải 'go' và các release_conditions giới hạn chặt phạm vi cho đến khi GAP-01/02/04 chuyển sang done."
+  }
+}
