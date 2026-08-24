@@ -1,0 +1,112 @@
+{
+  "schema_version": "1.0.0",
+  "metadata": {
+    "student_name": "Cao Nhat Minh",
+    "student_id": "2A202601507",
+    "group_id": "HooLeeSheet",
+    "submitted_at": "2026-08-24T18:00:00+07:00"
+  },
+  "industry": "healthcare-assistant",
+  "product_context": {
+    "product_name": "Ward Deterioration and Intake Assistant",
+    "product_stage": "pilot",
+    "problem_statement": "Deterioration signals sit scattered across vital signs, laboratory results and verbal handover, so ward teams notice a declining patient late and intake documentation stays inconsistent between shifts.",
+    "target_users": ["ward nurses", "duty doctors", "clinical safety officer"],
+    "value_hypothesis": "Surfacing linked evidence at handover shortens the time from an abnormal vital sign to a documented clinician decision without reducing how many deteriorating patients get escalated.",
+    "in_scope": [
+      "summarise recorded vitals and labs for the duty doctor",
+      "draft an intake note that a clinician must edit and sign",
+      "flag deterioration risk with links back to the underlying measurements"
+    ],
+    "non_goals": [
+      "patient-facing medical diet or treatment advice",
+      "autonomous escalation discharge or medication ordering",
+      "diagnosis or replacement of the clinical early warning score"
+    ],
+    "user_journey_moment": "At nurse handover and ward rounds, after vital signs are recorded and before the duty doctor decides whether to escalate",
+    "target_launch_or_review_date": "2026-11-30",
+    "automation_level": "decision-support",
+    "fallback_experience": "The ward keeps the standard early warning score chart and verbal handover, and the assistant shows an explicit unavailable state rather than a stale or partial score.",
+    "decision_reversibility": "hard-to-reverse"
+  },
+  "system_profile": {
+    "purpose": "Give ward clinicians an evidence summary and a deterioration flag in the minutes before an escalation decision.",
+    "user_groups": ["ward nurses", "duty doctors", "clinical safety officer", "hospital quality and risk team"],
+    "decision_impact": "The flag and the drafted note influence whether a clinician escalates a patient, while the clinician still records and signs the final decision.",
+    "data_types": [
+      "vital sign measurements",
+      "laboratory results",
+      "nursing observation notes",
+      "handover voice recordings and transcripts",
+      "admission history"
+    ],
+    "deployment_context": "A hospital runs the assistant on inpatient wards through a vendor model and a speech service connected to the electronic health record.",
+    "target_markets": ["Vietnam", "European Union"],
+    "system_boundary": {
+      "model": "vendor deterioration risk score, a speech-to-text service and a summarisation model",
+      "application": "ward dashboard, handover view and an editable note draft that requires a clinician signature",
+      "people": ["ward nurses", "duty doctors", "rapid response team", "clinical safety officer", "patients and families"],
+      "vendors": ["electronic health record provider", "speech-to-text provider", "deterioration model provider"],
+      "upstream_inputs": ["vital sign feed", "laboratory result feed", "handover audio", "admission and history records"],
+      "downstream_decisions": [
+        "escalate to the rapid response team",
+        "order additional tests",
+        "continue routine monitoring",
+        "sign the note into the patient chart"
+      ]
+    }
+  },
+  "industry_risk_snapshot": {
+    "harm_severity": 5,
+    "high_stakes": 5,
+    "sensitive_data": 5,
+    "affected_scale": 4,
+    "human_review_need": 5,
+    "rationale": "harm_severity and high_stakes sit at the ceiling because a late or missed escalation can end in death or permanent injury and cannot be undone by a later correction. sensitive_data sits at the ceiling because the assistant reads vital signs, labs and voice handover, all health data. affected_scale is 4 rather than 5 because the pilot reaches only admitted patients on a small number of wards, not the full hospital population. human_review_need is 5 because the patient carrying the risk never chose the tool and cannot appeal a missed flag after the fact, so meaningful clinician review and a working chart fallback are mandatory. The true severity depends on how often the vendor score is wrong on this hospital's own patients, which is not yet measured locally; this snapshot is a triage input for where to dig deeper, not a legal classification and not a single summed compliance score."
+  },
+  "legal_classification": {
+    "vietnam": {
+      "status": "uncertain-requires-legal-review",
+      "rationale": "This is a hospital-deployed, decision-support-only assistant (not autonomous) that reads vital signs, labs and voice handover for inpatients, so Vietnam's AI Law and personal-data rules plausibly apply to this use case and role regardless of high-risk status. Law 134/2025/QH15 took effect 2026-03-01 and Decision 33/2026/QD-TTg's high-risk list took effect 2026-08-15, but both accessed pages expose only document metadata and a signed PDF attachment, not the list's actual entries, so it is not yet confirmed whether a ward deterioration and intake assistant of this kind is on that list. The open question is list membership and the resulting obligations, not whether the law reaches this product.",
+      "source_ids": ["SRC-04", "SRC-05", "SRC-07"]
+    },
+    "eu": {
+      "status": "uncertain-requires-legal-review",
+      "rationale": "For the same hospital-deployed decision-support product offered under this pilot's vendor-hosted, hospital-deployer boundary, the EU AI Act could route this through the essential-services high-risk path or, if the deterioration score meets the definition of software as a medical device, through the regulated-product path referencing EU medical-device law; the two paths carry different compliance dates, 2027-12-02 versus 2028-08-02, under the Commission's staged timeline. The Commission's public overview sets out the four risk tiers and those dates but does not name healthcare, medical devices or patient triage, so it does not resolve which path or provider/deployer role applies to this specific product boundary. The open question here is which path and role apply, not whether AI in this space is regulated at all.",
+      "source_ids": ["SRC-06"]
+    },
+    "other_markets": "system_profile.target_markets for this pilot lists only Vietnam and the European Union, so no other jurisdiction is in scope and none has been assessed. If a future release adds a market such as the United States, separate local counsel review covering employment, health-privacy and medical-device rules for that market would be required before scoping it, following the same release-gate pattern already used for Vietnam and the EU.",
+    "legal_review_required": true
+  },
+  "product_metrics": {
+    "success_kpi": "Median time from the first abnormal vital sign to a documented clinician decision falls to at most four hours across the pilot wards.",
+    "risk_kri": "The share of deterioration events the assistant did not flag before clinician recognition stays at or below the pre-pilot chart-only baseline.",
+    "guardrail_metric": "Note drafts that reach a clinician signature while still containing an unreviewed low-confidence transcript span remain exactly zero in every weekly reporting period.",
+    "review_cadence": "Weekly during the pilot and before any vendor model speech service ward scope or target market change."
+  },
+  "release_decision": {
+    "accountable_product_owner": "Clinical Systems Product Owner",
+    "risk_acceptance_owner": "Hospital Chief Medical Officer",
+    "independent_reviewer": "Clinical Safety and Ethics Committee",
+    "decision": "conditional-go",
+    "release_blockers": [
+      "GAP-01: Vietnam classification not yet mapped to the full high-risk list text",
+      "GAP-02: EU route role and obligation date not yet determined",
+      "GAP-03: lawful basis and data protection impact assessment not signed",
+      "GAP-04: vendor deterioration score not yet validated on local patient data",
+      "GAP-05: transcript fabrication control not yet measured or evidenced",
+      "GAP-06: patient-facing advice regression test not yet automated",
+      "GAP-07: per-shift alert cap and dismissal-rate monitor not yet built",
+      "GAP-08: subgroup transcription error monitoring not yet in place"
+    ],
+    "release_conditions": [
+      "no ward goes live with real patients until every GAP-01 through GAP-08 blocker reaches status done with the named owner's evidence on file",
+      "clinician signature required on every note before it enters the chart",
+      "early warning score chart stays authoritative over the assistant",
+      "no patient-facing advice surface on any pilot ward",
+      "named on-call clinical safety owner during pilot hours"
+    ],
+    "next_review_trigger": "Review on any guardrail breach, any missed deterioration incident, any vendor model change, or by 2026-11-30, whichever comes first.",
+    "residual_risk_rationale": "No patient has been exposed to the assistant yet; this conditional-go authorizes continued build and validation work toward the 2026-11-30 target only, not go-live. Go-live on any ward is gated on every GAP-01 through GAP-08 blocker reaching status done, because without GAP-04's local validation the team cannot yet state whether the vendor score performs adequately on this hospital's own patients, and without GAP-01 and GAP-02 the team cannot yet state which jurisdiction obligations apply. Once those gates close, the accepted residual risk is late benefit from decision-support delay rather than an unreviewed automated clinical decision, because the chart stays authoritative, every note needs a clinician signature, and the pilot stops on the first guardrail breach."
+  }
+}
